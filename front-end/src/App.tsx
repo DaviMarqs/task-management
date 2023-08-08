@@ -1,3 +1,4 @@
+import "./default.css";
 import "./globals.css";
 import { Home } from "./pages/Home";
 
