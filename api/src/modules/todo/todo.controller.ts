@@ -66,12 +66,26 @@ export class TodoController {
 
   @Patch(':id/done')
   markTodoAsDone(@Param('id') id: string): Promise<Todo> {
-    return this.todoService.markTodoAsDone(id);
+    try {
+      return this.todoService.markTodoAsDone(id);
+    } catch (error) {
+      throw new HttpException(
+        'Error marking task as done',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Patch(':id/undone')
   markTodoAsUndone(@Param('id') id: string): Promise<Todo> {
-    return this.todoService.markTodoAsUndone(id);
+    try {
+      return this.todoService.markTodoAsUndone(id);
+    } catch (error) {
+      throw new HttpException(
+        'Error marking task as undone',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Post(':id/subtasks')

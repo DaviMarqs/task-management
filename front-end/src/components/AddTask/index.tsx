@@ -20,13 +20,14 @@ export function AddTask({ addingNewTask, setAddingNewTask }: AddTaskProps) {
   const { handleCreateNewTask } = useTask();
 
   async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     await handleCreateNewTask(event, taskToAdd);
     setAddingNewTask(false);
     setTaskToAdd("");
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(event) => handleSubmit(event)}>
       <Dialog onOpenChange={() => setAddingNewTask(false)} open={addingNewTask}>
         <div className="w-full flex justify-center">
           <DialogContent className="m-4 border-2 border-gray-100 rounded-3xl text-gray-100 sm:min-w-[325px] lg:w-[1024px] ">

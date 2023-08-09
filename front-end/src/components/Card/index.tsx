@@ -14,12 +14,13 @@ import {
 import { Checkbox } from "../ui/checkbox";
 interface CardComponentProps {
   task: Task;
+  createSubtask: (subtask: { label: string; todoId: string }) => void;
 }
 
-export function CardComponent({ task }: CardComponentProps) {
+export function CardComponent({ task, createSubtask }: CardComponentProps) {
   const [selectedTask, setSelectedTask] = useState(task);
   const [addingNewSubtask, setAddingNewSubtask] = useState(false);
-  const { markTaskAsDone, markTaskAsUndone, createSubtask } = useTask();
+  const { markTaskAsDone, markTaskAsUndone } = useTask();
 
   function handleChangeStatus() {
     if (selectedTask.done) {
@@ -46,7 +47,7 @@ export function CardComponent({ task }: CardComponentProps) {
             </CardTitle>
             <Checkbox
               checked={selectedTask.done}
-              onClick={() => handleChangeStatus(selectedTask.id)}
+              onClick={handleChangeStatus}
               className="text-gray-50"
             />
           </div>
@@ -57,7 +58,7 @@ export function CardComponent({ task }: CardComponentProps) {
             </p>
             <div
               className={`max-h-20 overflow-y-auto ${
-                selectedTask.done ? "line-through text-slate-600" : ""
+                selectedTask.done ? "line-through text-slate-900" : ""
               }`}
             >
               {selectedTask?.subtasks?.map((subtask) => (

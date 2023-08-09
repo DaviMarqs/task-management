@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Subtask } from "../@types/subtask";
+import { useToast, } from "../components/ui/use-toast";
 import { useTaskContext } from "../contexts/TaskContext";
 import { api } from "../lib/axios";
 
 export default function useTask() {
   const [isLoading, setIsLoading] = useState(false);
   const { setTasks } = useTaskContext();
+  const { toast } = useToast();
 
   async function getTasks(query?: string) {
     try {
@@ -15,6 +17,10 @@ export default function useTask() {
       return res.data;
     } catch (error) {
       console.log(error, "error");
+      toast({
+        title: "Error",
+        description: "Error fetching tasks",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -23,12 +29,23 @@ export default function useTask() {
   async function handleCreateNewTask(event: React.FormEvent, label: string) {
     event.preventDefault();
     try {
+      setIsLoading(true);
       await api.post("todo", {
         label: label,
       });
       getTasks();
+      toast({
+        title: "Success!",
+        description: "Task created successfully.",
+      });
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Error",
+        description: "Error creating task",
+      });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -36,8 +53,15 @@ export default function useTask() {
     try {
       setIsLoading(true);
       await api.patch(`todo/${id}/done`);
+      toast({
+        title: "Success!",
+      });
     } catch (error) {
       console.log(error, "error");
+      toast({
+        title: "Error",
+        description: "Error updating task.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -47,8 +71,15 @@ export default function useTask() {
     try {
       setIsLoading(true);
       await api.patch(`todo/${id}/undone`);
+      toast({
+        title: "Success!",
+      });
     } catch (error) {
       console.log(error, "error");
+      toast({
+        title: "Error",
+        description: "Error updating task.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -60,8 +91,16 @@ export default function useTask() {
       await api.post(`todo/${todoId}/subtasks`, { label });
       const updatedTasks = await getTasks();
       setTasks(updatedTasks);
+      toast({
+        title: "Success!",
+        description: "Subtask created successfully.",
+      });
     } catch (error) {
       console.log(error, "error");
+      toast({
+        title: "Error",
+        description: "Error creating subtask",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -69,8 +108,8 @@ export default function useTask() {
 
   return {
     getTasks,
-    setIsLoading,
     isLoading,
+    setIsLoading,
     markTaskAsDone,
     markTaskAsUndone,
     createSubtask,

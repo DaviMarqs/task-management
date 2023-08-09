@@ -10,18 +10,24 @@ interface AddSubtaskProps {
   createSubtask: (subtask: { label: string; todoId: string }) => void;
 }
 
-export function AddSubtask({ setAddingNewSubtask, taskId }: AddSubtaskProps) {
+export function AddSubtask({
+  setAddingNewSubtask,
+  taskId,
+  createSubtask,
+}: AddSubtaskProps) {
   const [subtask, setSubtask] = useState("");
-  const { createSubtask, setIsLoading } = useTask();
+  const { setIsLoading, getTasks } = useTask();
 
-  async function handleAddSubtask() {
+  function handleAddSubtask(event: React.FormEvent) {
+    event.preventDefault();
     try {
-      await createSubtask({
+      createSubtask({
         label: subtask,
         todoId: taskId,
       });
       setSubtask("");
       setAddingNewSubtask(false);
+      getTasks();
     } catch (error) {
       console.log(error, "error");
     } finally {
@@ -31,13 +37,14 @@ export function AddSubtask({ setAddingNewSubtask, taskId }: AddSubtaskProps) {
 
   return (
     <form
-      onSubmit={handleAddSubtask}
+      onSubmit={(event) => handleAddSubtask(event)}
       className="flex w-full max-w-sm items-center space-x-2"
     >
       <Input
         className="text-gray-950 font-bold placeholder:text-purple-800"
         type="text"
         placeholder="Add your subtask"
+        value={subtask}
         onChange={(e) => setSubtask(e.target.value)}
       />
       <Button

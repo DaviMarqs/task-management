@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
 import { Task } from "../@types/task";
 
+interface TaskProviderProps {
+  children: React.ReactNode; // ou JSX.Element se for apenas um elemento
+}
 interface TaskContextType {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -9,7 +12,7 @@ interface TaskContextType {
 // Crie o contexto
 const TaskContext = createContext<TaskContextType | null>(null);
 
-export const TaskProvider: React.FC = ({ children }: any) => {
+export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const value: TaskContextType = { tasks, setTasks };
 
