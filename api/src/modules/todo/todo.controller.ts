@@ -8,9 +8,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Todo } from '@prisma/client';
+import { CreateSubtaskDto } from './dtos/create-subtask';
 import { CreateTodoDto } from './dtos/create-todo.dto';
 import { UpdateTodoDto } from './dtos/update-todo.dto';
 import { TodoService } from './todo.service';
@@ -21,18 +23,18 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Post()
-  async create(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
+  create(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
     try {
-      return await this.todoService.create(createTodoDto);
+      return this.todoService.create(createTodoDto);
     } catch (error) {
       throw new HttpException('Error creating tasks', HttpStatus.BAD_REQUEST);
     }
   }
 
   @Get()
-  async findAll(): Promise<Todo[]> {
+  findAll(@Query('filter') filter: string): Promise<Todo[]> {
     try {
-      return await this.todoService.findAll();
+      return this.todoService.findAll(filter);
     } catch (error) {
       throw new HttpException(
         'Error fetching tasks',
@@ -42,30 +44,48 @@ export class TodoController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Todo> {
+  findOne(@Param('id') id: string): Promise<Todo> {
     try {
-      return await this.todoService.findOne(id);
+      return this.todoService.findOne(id);
     } catch (error) {
       throw new HttpException('Error fetching task', HttpStatus.NOT_FOUND);
     }
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('id') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
   ): Promise<Todo> {
     try {
-      return await this.todoService.update(id, updateTodoDto);
+      return this.todoService.update(id, updateTodoDto);
     } catch (error) {
       throw new HttpException('Error updating task', HttpStatus.BAD_REQUEST);
     }
   }
 
+  @Patch(':id/done')
+  markTodoAsDone(@Param('id') id: string): Promise<Todo> {
+    return this.todoService.markTodoAsDone(id);
+  }
+
+  @Patch(':id/undone')
+  markTodoAsUndone(@Param('id') id: string): Promise<Todo> {
+    return this.todoService.markTodoAsUndone(id);
+  }
+
+  @Post(':id/subtasks')
+  createSubtask(
+    @Param('id') id: string,
+    @Body() createSubtaskDto: CreateSubtaskDto,
+  ) {
+    return this.todoService.createSubtask(id, createSubtaskDto);
+  }
+
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Todo> {
+  remove(@Param('id') id: string): Promise<Todo> {
     try {
-      return await this.todoService.remove(id);
+      return this.todoService.remove(id);
     } catch (error) {
       throw new HttpException(
         'Error deleting task',

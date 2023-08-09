@@ -1,20 +1,31 @@
 import { Check, X } from "lucide-react";
 import { useState } from "react";
+import useTask from "../../hooks/useTask";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 interface AddSubtaskProps {
   setAddingNewSubtask: (addingNewsubtask: boolean) => void;
+  taskId: string;
+  createSubtask: (subtask: { label: string; todoId: string }) => void;
 }
 
-export function AddSubtask({ setAddingNewSubtask }: AddSubtaskProps) {
+export function AddSubtask({ setAddingNewSubtask, taskId }: AddSubtaskProps) {
   const [subtask, setSubtask] = useState("");
+  const { createSubtask, setIsLoading } = useTask();
 
-  function handleAddSubtask(event: React.FormEvent) {
-    event?.preventDefault();
-    if (!subtask) {
+  async function handleAddSubtask() {
+    try {
+      await createSubtask({
+        label: subtask,
+        todoId: taskId,
+      });
+      setSubtask("");
       setAddingNewSubtask(false);
-      return;
+    } catch (error) {
+      console.log(error, "error");
+    } finally {
+      setIsLoading(false);
     }
   }
 

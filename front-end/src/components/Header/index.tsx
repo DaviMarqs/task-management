@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 
 export function Header() {
   const [addingNewTask, setAddingNewTask] = useState(false);
+
   return (
     <>
       <div className="h-12 w-full gap-5 px-5 py-10 mb-8 bg-gray-950 flex justify-between items-center">

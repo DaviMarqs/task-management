@@ -2,14 +2,16 @@ import { useEffect } from "react";
 import { Task } from "../@types/task";
 import { CardComponent } from "../components/Card";
 import { Header } from "../components/Header";
+import { useTaskContext } from "../contexts/TaskContext";
 import useTask from "../hooks/useTask";
 
 export function Home() {
-  const { getTasks, tasks, setTasks, isLoading } = useTask();
+  const { getTasks } = useTask();
+  const { tasks } = useTaskContext();
 
   useEffect(() => {
     getTasks();
-  });
+  }, []);
 
   return (
     <>

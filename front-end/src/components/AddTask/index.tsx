@@ -1,12 +1,11 @@
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
 } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import useTask from "../../hooks/useTask";
-import { api } from "../../lib/axios";
 import { Button } from "../ui/button";
 import { DialogFooter, DialogHeader } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -18,25 +17,16 @@ interface AddTaskProps {
 
 export function AddTask({ addingNewTask, setAddingNewTask }: AddTaskProps) {
   const [taskToAdd, setTaskToAdd] = useState("");
-  const { getTasks } = useTask();
+  const { handleCreateNewTask } = useTask();
 
-  async function handleCreateNewTask(event: React.FormEvent) {
-    event.preventDefault();
-    try {
-      await api.post("todo", {
-        label: taskToAdd,
-      });
-      getTasks();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setAddingNewTask(false);
-      setTaskToAdd("");
-    }
+  async function handleSubmit(event: React.FormEvent) {
+    await handleCreateNewTask(event, taskToAdd);
+    setAddingNewTask(false);
+    setTaskToAdd("");
   }
 
   return (
-    <form onSubmit={handleCreateNewTask}>
+    <form onSubmit={handleSubmit}>
       <Dialog onOpenChange={() => setAddingNewTask(false)} open={addingNewTask}>
         <div className="w-full flex justify-center">
           <DialogContent className="m-4 border-2 border-gray-100 rounded-3xl text-gray-100 sm:min-w-[325px] lg:w-[1024px] ">
@@ -58,6 +48,7 @@ export function AddTask({ addingNewTask, setAddingNewTask }: AddTaskProps) {
               <Button
                 className="my-4 mx-7 lg:mx-[98px] bg-transparent border-2 border-gray-100"
                 type="submit"
+                disabled={!taskToAdd}
               >
                 Save
               </Button>

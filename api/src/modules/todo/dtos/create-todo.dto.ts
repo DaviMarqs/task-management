@@ -6,4 +6,5 @@ export class CreateTodoDto extends OmitType(TodoEntity, [
   'done',
   'created_at',
   'updated_at',
+  'subtasks',
 ]) {}

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Task } from "../../@types/task";
+import useTask from "../../hooks/useTask";
+import { formatDate } from "../../utils/formatDate";
 import { AddSubtask } from "../AddSubtask";
 import { Button } from "../ui/button";
 import {
@@ -15,30 +17,64 @@ interface CardComponentProps {
 }
 
 export function CardComponent({ task }: CardComponentProps) {
+  const [selectedTask, setSelectedTask] = useState(task);
   const [addingNewSubtask, setAddingNewSubtask] = useState(false);
+  const { markTaskAsDone, markTaskAsUndone, createSubtask } = useTask();
+
+  function handleChangeStatus() {
+    if (selectedTask.done) {
+      markTaskAsUndone(selectedTask.id);
+      setSelectedTask((prevTask) => ({ ...prevTask, done: false }));
+      return;
+    }
+    markTaskAsDone(selectedTask.id);
+    setSelectedTask((prevTask) => ({ ...prevTask, done: true }));
+  }
+
+  const hasSubtasks = task.subtasks && task.subtasks.length > 0;
   return (
     <>
-      <Card className="w-72 h-64 m-8 bg-purple-500 ring-1 ring-purple-600 hover:bg-purple-400 ">
+      <Card
+        className={`w-72 m-8 ${
+          hasSubtasks ? "h-auto" : "h-48"
+        } bg-purple-500 ring-1 ring-purple-600 hover:bg-purple-400 `}
+      >
         <CardHeader className="flex align-center justify-center">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">
-              <h1>{task.label}</h1>
+              <h1>{selectedTask.label}</h1>
             </CardTitle>
-            <Checkbox className="text-gray-50" />
+            <Checkbox
+              checked={selectedTask.done}
+              onClick={() => handleChangeStatus(selectedTask.id)}
+              className="text-gray-50"
+            />
           </div>
 
           <CardDescription className="text-gray-50">
             <p className="mb-2 font-semibold text-yellow-300">
-              {task.created_at}
+              {formatDate(selectedTask.created_at)}
             </p>
-            <p className="font-bold mb-1">SUBTASK 1</p>
-            <p className="font-bold mb-1">Subtask 2</p>
-            <p className="font-bold mb-1">Subtask 3</p>
+            <div
+              className={`max-h-20 overflow-y-auto ${
+                selectedTask.done ? "line-through text-slate-600" : ""
+              }`}
+            >
+              {selectedTask?.subtasks?.map((subtask) => (
+                <p className="font-bold mb-1" key={subtask.id}>
+                  {`• ${subtask.label.toUpperCase()}`}
+                </p>
+              ))}
+            </div>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center">
           {addingNewSubtask ? (
-            <AddSubtask setAddingNewSubtask={setAddingNewSubtask} />
+            <AddSubtask
+              taskId={selectedTask.id}
+              setAddingNewSubtask={setAddingNewSubtask}
+              createSubtask={createSubtask}
+            />
           ) : (
             <Button
               variant="link"

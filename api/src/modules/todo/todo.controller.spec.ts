@@ -76,7 +76,7 @@ describe('TodoController', () => {
 
         jest.spyOn(service, 'findAll').mockResolvedValue(expectedResult);
 
-        const result = await controller.findAll();
+        const result = await controller.findAll('newest');
         expect(result).toEqual(expectedResult);
       });
 
@@ -101,6 +101,7 @@ describe('TodoController', () => {
           done: false,
           created_at: new Date(),
           updated_at: new Date(),
+          substasks: [],
         };
 
         jest.spyOn(service, 'findOne').mockResolvedValue(expectedResult);
