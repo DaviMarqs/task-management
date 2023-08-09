@@ -11,10 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Todo } from '@prisma/client';
 import { CreateSubtaskDto } from './dtos/create-subtask';
 import { CreateTodoDto } from './dtos/create-todo.dto';
 import { UpdateTodoDto } from './dtos/update-todo.dto';
+import { TodoEntity } from './entities/prisma/todo.entity';
 import { TodoService } from './todo.service';
 
 @ApiTags('todo')
@@ -23,7 +23,7 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Post()
-  create(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
+  create(@Body() createTodoDto: CreateTodoDto): Promise<TodoEntity> {
     try {
       return this.todoService.create(createTodoDto);
     } catch (error) {
@@ -32,7 +32,7 @@ export class TodoController {
   }
 
   @Get()
-  findAll(@Query('filter') filter: string): Promise<Todo[]> {
+  findAll(@Query('filter') filter: string): Promise<TodoEntity[]> {
     try {
       return this.todoService.findAll(filter);
     } catch (error) {
@@ -44,7 +44,7 @@ export class TodoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Todo> {
+  findOne(@Param('id') id: string): Promise<TodoEntity> {
     try {
       return this.todoService.findOne(id);
     } catch (error) {
@@ -56,7 +56,7 @@ export class TodoController {
   update(
     @Param('id') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
-  ): Promise<Todo> {
+  ): Promise<TodoEntity> {
     try {
       return this.todoService.update(id, updateTodoDto);
     } catch (error) {
@@ -65,7 +65,7 @@ export class TodoController {
   }
 
   @Patch(':id/done')
-  markTodoAsDone(@Param('id') id: string): Promise<Todo> {
+  markTodoAsDone(@Param('id') id: string): Promise<TodoEntity> {
     try {
       return this.todoService.markTodoAsDone(id);
     } catch (error) {
@@ -77,7 +77,7 @@ export class TodoController {
   }
 
   @Patch(':id/undone')
-  markTodoAsUndone(@Param('id') id: string): Promise<Todo> {
+  markTodoAsUndone(@Param('id') id: string): Promise<TodoEntity> {
     try {
       return this.todoService.markTodoAsUndone(id);
     } catch (error) {
@@ -97,7 +97,7 @@ export class TodoController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<Todo> {
+  remove(@Param('id') id: string): Promise<TodoEntity> {
     try {
       return this.todoService.remove(id);
     } catch (error) {
