@@ -1,7 +1,6 @@
-import { Todo as TodoModel } from '@prisma/client';
 import { SubtaskEntity } from './subtask.entity';
 
-export class TodoEntity implements TodoModel {
+export class TodoEntity {
   id: string;
   label: string;
   done: boolean;

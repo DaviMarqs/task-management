@@ -1,6 +1,4 @@
-import { Subtask as SubtaskModel } from '@prisma/client';
-
-export class SubtaskEntity implements SubtaskModel {
+export class SubtaskEntity {
   id: string;
   label: string;
   done: boolean;
