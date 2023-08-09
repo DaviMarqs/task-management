@@ -33,6 +33,7 @@ export function CardComponent({ task, createSubtask }: CardComponentProps) {
   }
 
   const hasSubtasks = task.subtasks && task.subtasks.length > 0;
+  const taskDone = selectedTask.done;
   return (
     <>
       <Card
@@ -69,23 +70,26 @@ export function CardComponent({ task, createSubtask }: CardComponentProps) {
             </div>
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-center">
-          {addingNewSubtask ? (
-            <AddSubtask
-              taskId={selectedTask.id}
-              setAddingNewSubtask={setAddingNewSubtask}
-              createSubtask={createSubtask}
-            />
-          ) : (
-            <Button
-              variant="link"
-              className="text-yellow-300 font-bold hover:text-gray-950"
-              onClick={() => setAddingNewSubtask(true)}
-            >
-              CREATE NEW SUBTASK
-            </Button>
-          )}
-        </CardContent>
+
+        {!taskDone && (
+          <CardContent className="flex items-center justify-center">
+            {addingNewSubtask ? (
+              <AddSubtask
+                taskId={selectedTask.id}
+                setAddingNewSubtask={setAddingNewSubtask}
+                createSubtask={createSubtask}
+              />
+            ) : (
+              <Button
+                variant="link"
+                className="text-yellow-300 font-bold hover:text-gray-950"
+                onClick={() => setAddingNewSubtask(true)}
+              >
+                CREATE NEW SUBTASK
+              </Button>
+            )}
+          </CardContent>
+        )}
       </Card>
     </>
   );
