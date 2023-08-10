@@ -1,3 +1,4 @@
+import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { Task } from "../../@types/task";
 import useTask from "../../hooks/useTask";
@@ -20,7 +21,7 @@ interface CardComponentProps {
 export function CardComponent({ task, createSubtask }: CardComponentProps) {
   const [selectedTask, setSelectedTask] = useState(task);
   const [addingNewSubtask, setAddingNewSubtask] = useState(false);
-  const { markTaskAsDone, markTaskAsUndone } = useTask();
+  const { markTaskAsDone, markTaskAsUndone, deleteTask } = useTask();
 
   function handleChangeStatus() {
     if (selectedTask.done) {
@@ -30,6 +31,10 @@ export function CardComponent({ task, createSubtask }: CardComponentProps) {
     }
     markTaskAsDone(selectedTask.id);
     setSelectedTask((prevTask) => ({ ...prevTask, done: true }));
+  }
+
+  function handleDeleteTask() {
+    deleteTask(selectedTask);
   }
 
   const hasSubtasks = task.subtasks && task.subtasks.length > 0;
@@ -43,14 +48,22 @@ export function CardComponent({ task, createSubtask }: CardComponentProps) {
       >
         <CardHeader className="flex align-center justify-center">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">
-              <h1>{selectedTask.label}</h1>
+            <CardTitle className="w-1/2">
+              <h1 className="text-sm break-words">{selectedTask.label}</h1>
             </CardTitle>
-            <Checkbox
-              checked={selectedTask.done}
-              onClick={handleChangeStatus}
-              className="text-gray-50"
-            />
+            <div className="flex items-center justify-around">
+              <Checkbox
+                checked={selectedTask.done}
+                onClick={handleChangeStatus}
+                className="text-gray-50 mr-1"
+              />
+              <Button
+                className="min-w-0 w-12 ml-2 bg-transparent text-gray-950 hover:bg-transparent hover:text-gray-50"
+                onClick={handleDeleteTask}
+              >
+                <Trash2Icon />
+              </Button>
+            </div>
           </div>
 
           <CardDescription className="text-gray-50">
@@ -63,8 +76,11 @@ export function CardComponent({ task, createSubtask }: CardComponentProps) {
               }`}
             >
               {selectedTask?.subtasks?.map((subtask) => (
-                <p className="font-bold mb-1" key={subtask.id}>
-                  {`• ${subtask.label.toUpperCase()}`}
+                <p
+                  className="font-bold mb-1 text-sm break-words"
+                  key={subtask.id}
+                >
+                  {`•${subtask.label.toUpperCase()}`}
                 </p>
               ))}
             </div>

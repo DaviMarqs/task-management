@@ -216,4 +216,39 @@ describe('TodoController', () => {
       );
     });
   });
+
+  describe('delete', () => {
+    it('should delete a todo by ID', async () => {
+      const todoId = 'some-id';
+      const expectedResult = {
+        id: todoId,
+        label: 'Deleted Todo',
+        done: false,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+
+      jest.spyOn(service, 'remove').mockResolvedValue(expectedResult);
+
+      const result = await controller.remove(todoId);
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should throw a HttpException with status 500 when TodoService throws an error', async () => {
+      const todoId = 'some-id';
+
+      jest
+        .spyOn(service, 'remove')
+        .mockRejectedValue(new Error('Error deleting task'));
+
+      await expect(async () => {
+        await controller.remove(todoId);
+      }).rejects.toThrow(
+        new HttpException(
+          'Error deleting task',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        ),
+      );
+    });
+  });
 });

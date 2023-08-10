@@ -46,6 +46,7 @@ export function AddSubtask({
         placeholder="Add your subtask"
         value={subtask}
         onChange={(e) => setSubtask(e.target.value)}
+        maxLength={30}
       />
       <Button
         type="submit"

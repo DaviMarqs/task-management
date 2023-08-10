@@ -43,6 +43,7 @@ export function AddTask({ addingNewTask, setAddingNewTask }: AddTaskProps) {
                 value={taskToAdd}
                 className="col-span-3"
                 onChange={(e) => setTaskToAdd(e.target.value)}
+                maxLength={40}
               />
             </div>
             <DialogFooter>

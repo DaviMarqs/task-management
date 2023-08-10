@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Subtask } from "../@types/subtask";
-import { useToast, } from "../components/ui/use-toast";
+import { Task } from "../@types/task";
+import { useToast } from "../components/ui/use-toast";
 import { useTaskContext } from "../contexts/TaskContext";
 import { api } from "../lib/axios";
 
@@ -105,6 +106,26 @@ export default function useTask() {
       setIsLoading(false);
     }
   }
+  async function deleteTask({ id }: Task) {
+    try {
+      setIsLoading(true);
+      await api.delete(`todo/${id}`);
+      const updatedTasks = await getTasks();
+      setTasks(updatedTasks);
+      toast({
+        title: "Success!",
+        description: "Task deleted successfully.",
+      });
+    } catch (error) {
+      console.log(error, "error");
+      toast({
+        title: "Error",
+        description: "Error deleting subtask",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return {
     getTasks,
@@ -114,5 +135,6 @@ export default function useTask() {
     markTaskAsUndone,
     createSubtask,
     handleCreateNewTask,
+    deleteTask,
   };
 }
