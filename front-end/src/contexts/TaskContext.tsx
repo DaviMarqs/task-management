@@ -9,7 +9,6 @@ interface TaskContextType {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-// Crie o contexto
 const TaskContext = createContext<TaskContextType | null>(null);
 
 export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
