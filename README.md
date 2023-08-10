@@ -4,7 +4,7 @@
 
 A minimalist task management application, created using the following technologies:
 
-- **Front-end**: React, Tailwind CSS, TypeScript
+- **Front-end**: React, Tailwind CSS, TypeScript, Shacn/ui
 - **Back-end**: Nest.js, MongoDB (Atlas), Prisma, Docker
 - **Unit Testing**: Jest
 - **API Documentation**: Swagger
@@ -72,7 +72,7 @@ Enjoy the Task Management App! 🚀
 
 Uma aplicação minimalista de gerenciamento de tarefas, criada utilizando as seguintes tecnologias:
 
-- **Front-end**: React, Tailwind CSS, TypeScript
+- **Front-end**: React, Tailwind CSS, TypeScript, Shacn/ui
 - **Back-end**: Nest.js, MongoDB (Atlas), Prisma, Docker
 - **Testes Unitários**: Jest
 - **Documentação da API**: Swagger
